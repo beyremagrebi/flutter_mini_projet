@@ -1,7 +1,9 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    id "kotlin-android-extensions" // Add this line for Kotlin Android Extensions
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
 def localProperties = new Properties()
@@ -23,13 +25,22 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.authentification_firebase"
-    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    compileSdkVersion 30 // Change this to the appropriate compileSdkVersion
+    buildToolsVersion "30.0.3" // Change this to the appropriate buildToolsVersion
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    defaultConfig {
+        applicationId "com.example.authentification_firebase"
+        minSdkVersion 16 // Change this to the minimum SDK version your app supports
+        targetSdkVersion 30 // Change this to the target SDK version your app supports
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 
     kotlinOptions {
@@ -39,29 +50,15 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.authentification_firebase"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-    }
-
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
-    }
 }
 
 flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+}
+
+apply plugin: 'com.google.gms.google-services' // Add this line to apply the Google Services plugin
